@@ -1,6 +1,6 @@
 var rk = require('required-keys');
 module.exports = function (data, cb) {
-  var keys = ['inputKey', 'body']
+  var keys = ['logglyInputKey', 'body']
   var err = rk.truthySync(data, keys)
   if (err) {
     return cb({
@@ -9,16 +9,22 @@ module.exports = function (data, cb) {
     })
   }
   var xhr = new XMLHttpRequest();
-  var async = false
-  var inputKey = data.inputKey
+  var async = true
+  var logglyInputKey = data.logglyInputKey
   var body = data.body
-  var url = 'https://logs.loggly.com/inputs/' + inputKey
+
+  var url = 'https://logs.loggly.com/inputs/' + logglyInputKey
+  var bodyString = JSON.stringify(body)
   xhr.open("POST", url, async);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.send(body);
-  iimDisplay('sent post');
-  iimDisplay('add response: ' + xhr.response);
-  parseResponse(xhr, cb);
+  xhr.setRequestHeader('content-type', 'application/json');
+  iimDisplay('sending log data to loggly now: ' + JSON.stringify(data))
+  xhr.onreadystatechange = function(ev){
+    if(xhr.readyState === 4 && xhr.status === 200){
+      parseResponse(xhr, cb);
+    }
+  }
+  xhr.send(bodyString);
+
 }
 
 function parseResponse(xhr, cb) {
@@ -26,8 +32,10 @@ function parseResponse(xhr, cb) {
   var resData
   try {
     resData = JSON.parse(body)
+    iimDisplay('sent log data to loggly, resData: ' + JSON.stringify(resData))
   }
   catch(err) {
+    iimDisplay('error sending log data to loggly, error: ' + JSON.stringify(err))
     return cb({
       message: 'error posting log data to Loggly, failed to parse json response from Loggly after posting data',
       error: err,
