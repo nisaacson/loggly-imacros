@@ -1,0 +1,27 @@
+{
+  "name": "loggly-imacros",
+  "version": "1.0.0",
+  "description": "Send log data to Loggly from iMacros for firefox scripts",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nisaacson/loggly-imacros.git"
+  },
+  "keywords": [
+    "loggly",
+    "imacros",
+    "logging"
+  ],
+  "author": "Noah Isaacson",
+  "license": "BSD",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+    "browserify": "~2.7.1"
+  }
+}
