@@ -2,11 +2,14 @@ var rk = require('required-keys');
 module.exports = function (data, cb) {
   var keys = ['logglyInputKey', 'body']
   var err = rk.truthySync(data, keys)
+  var error
   if (err) {
-    return cb({
+    error = {
       message: 'error posting log data to Loggly, missing key in supplied data',
       error: err
-    })
+    }
+    if (cb) { return cb(error) }
+    return error
   }
   var xhr = new XMLHttpRequest();
   var async = true
@@ -20,11 +23,14 @@ module.exports = function (data, cb) {
   iimDisplay('sending log data to loggly now: ' + JSON.stringify(data))
   xhr.onreadystatechange = function(ev){
     if(xhr.readyState === 4 && xhr.status === 200){
-      parseResponse(xhr, cb);
+      iimDisplay('sent data to loggly correctly data corectly')
+      if (cb) {
+        return parseResponse(xhr, cb)
+      }
     }
   }
   xhr.send(bodyString);
-
+  return null
 }
 
 function parseResponse(xhr, cb) {

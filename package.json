@@ -1,6 +1,6 @@
 {
   "name": "loggly-imacros",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Send log data to Loggly from iMacros for firefox scripts",
   "main": "index.js",
   "directories": {
